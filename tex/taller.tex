@@ -1,0 +1,256 @@
+\documentclass[12pt]{article}
+
+%------------------------------------------------------------------------------
+% Paquetes
+%------------------------------------------------------------------------------
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{letterpaper, margin=1in}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+%------------------------------------------------------------------------------
+% Datos del documento
+%------------------------------------------------------------------------------
+\title{Segundo Taller Computacional\\\vspace{0.3em}Álgebra Lineal Aplicada}
+\author{Gustavo Adolfo Pérez Pérez\\Universidad Nacional de Colombia -- Sede Medellín\\Programa de Ciencias de la Computación}
+\date{Fecha de entrega: 2 de julio de 2025}
+
+%------------------------------------------------------------------------------
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+%------------------------------------------------------------------------------
+% 1. Convergencia y estabilidad de sucesiones recurrentes
+%------------------------------------------------------------------------------
+\section{Convergencia y estabilidad de sucesiones recurrentes}
+
+% --- Inserte aquí el desarrollo del punto 1 ---
+
+\vspace{2cm}
+
+%------------------------------------------------------------------------------
+% 2. Estabilidad numérica de valores propios vs valores singulares
+%------------------------------------------------------------------------------
+\section{Estabilidad numérica de valores propios vs valores singulares}
+
+En este problema analizaremos la estabilidad de los valores singulares frente a perturbaciones y la compararemos con la estabilidad de los valores propios.
+
+\subsection{Estabilidad de los valores singulares}
+
+\textbf{Teorema.} Sea $A \in \mathbb{C}^{m \times n}$ una matriz con valores singulares $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_{\min(m,n)} \geq 0$. Si $E \in \mathbb{C}^{m \times n}$ es una perturbación tal que $\|E\|_2 = \varepsilon \ll 1$, entonces los valores singulares $\tilde{\sigma}_i$ de $A + E$ satisfacen:
+\[
+|\sigma_i - \tilde{\sigma}_i| \leq \varepsilon, \quad \text{para } i = 1, 2, \ldots, \min(m,n)
+\]
+
+\textbf{Demostración.} Utilizaremos el Teorema de Weyl para valores singulares. Sin pérdida de generalidad, supongamos $m \geq n$.
+
+Primero, recordemos que los valores singulares de una matriz $M$ son las raíces cuadradas de los valores propios de $M^*M$. Para la matriz perturbada $A + E$, tenemos:
+\[
+(A + E)^*(A + E) = A^*A + A^*E + E^*A + E^*E
+\]
+
+Consideremos las matrices hermitianas aumentadas:
+\[
+H_A = \begin{pmatrix}
+0 & A \\
+A^* & 0
+\end{pmatrix}, \quad
+H_{A+E} = \begin{pmatrix}
+0 & A + E \\
+(A + E)^* & 0
+\end{pmatrix}
+\]
+
+Los valores propios de $H_A$ son $\pm\sigma_1, \pm\sigma_2, \ldots, \pm\sigma_n$ (y ceros adicionales si $m > n$), donde $\sigma_i$ son los valores singulares de $A$.
+
+Observemos que:
+\[
+H_{A+E} - H_A = \begin{pmatrix}
+0 & E \\
+E^* & 0
+\end{pmatrix} = H_E
+\]
+
+La norma espectral de $H_E$ es:
+\[
+\|H_E\|_2 = \max_{i} |\lambda_i(H_E)| = \|E\|_2 = \varepsilon
+\]
+
+Por el Teorema de Weyl para valores propios de matrices hermitianas, si $\lambda_1 \geq \lambda_2 \geq \cdots$ son los valores propios de $H_A$ ordenados de forma decreciente, y $\tilde{\lambda}_1 \geq \tilde{\lambda}_2 \geq \cdots$ son los valores propios de $H_{A+E}$, entonces:
+\[
+|\lambda_i - \tilde{\lambda}_i| \leq \|H_E\|_2 = \varepsilon
+\]
+
+Como los valores singulares de $A$ y $A + E$ corresponden a los valores propios no negativos de $H_A$ y $H_{A+E}$ respectivamente, concluimos que:
+\[
+|\sigma_i - \tilde{\sigma}_i| \leq \varepsilon, \quad \text{para todo } i
+\]
+
+Esto completa la demostración. $\square$
+
+\subsection{Inestabilidad de los valores propios}
+
+A diferencia de los valores singulares, los valores propios pueden ser extremadamente sensibles a perturbaciones. Presentaremos dos ejemplos ilustrativos.
+
+\textbf{Ejemplo 1: Matriz nilpotente.}
+Consideremos la matriz nilpotente de orden $n$:
+\[
+A = \begin{pmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \cdots & 1 \\
+0 & 0 & 0 & \cdots & 0
+\end{pmatrix} \in \mathbb{R}^{n \times n}
+\]
+
+Esta matriz tiene todos sus valores propios iguales a cero: $\lambda_i(A) = 0$ para $i = 1, \ldots, n$.
+
+Ahora consideremos la perturbación:
+\[
+E = \begin{pmatrix}
+0 & 0 & \cdots & 0 & 0 \\
+0 & 0 & \cdots & 0 & 0 \\
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+0 & 0 & \cdots & 0 & 0 \\
+\delta & 0 & \cdots & 0 & 0
+\end{pmatrix}
+\]
+
+donde $\delta > 0$ es pequeño. Entonces $\|E\|_2 = \delta$.
+
+La matriz perturbada $A + E$ tiene el polinomio característico:
+\[
+\det(\lambda I - (A + E)) = \lambda^n - \delta = 0
+\]
+
+Por lo tanto, los valores propios de $A + E$ son:
+\[
+\lambda_k = \delta^{1/n} e^{2\pi i k/n}, \quad k = 0, 1, \ldots, n-1
+\]
+
+Para $n$ grande y $\delta$ pequeño pero fijo, tenemos $\delta^{1/n} \approx 1$. Por ejemplo, si $n = 100$ y $\delta = 10^{-10}$, entonces:
+\[
+|\lambda_k(A + E) - \lambda_j(A)| = \delta^{1/n} = (10^{-10})^{1/100} = 10^{-0.1} \approx 0.794
+\]
+
+Aunque la perturbación tiene norma $\|E\|_2 = 10^{-10}$, los valores propios se mueven una distancia de aproximadamente $0.794$, que es mucho mayor que la norma de la perturbación.
+
+\textbf{Ejemplo 2: Matriz con valores propios coincidentes.}
+Consideremos la matriz:
+\[
+A = \begin{pmatrix}
+1 & 1 \\
+0 & 1
+\end{pmatrix}
+\]
+
+Esta matriz tiene un valor propio doble $\lambda = 1$ con un solo vector propio independiente (matriz defectiva).
+
+Consideremos la perturbación:
+\[
+E = \begin{pmatrix}
+0 & 0 \\
+\varepsilon & 0
+\end{pmatrix}
+\]
+
+donde $\varepsilon > 0$ es pequeño. La matriz perturbada es:
+\[
+A + E = \begin{pmatrix}
+1 & 1 \\
+\varepsilon & 1
+\end{pmatrix}
+\]
+
+El polinomio característico de $A + E$ es:
+\[
+\det(\lambda I - (A + E)) = (\lambda - 1)^2 - \varepsilon = 0
+\]
+
+Los valores propios de $A + E$ son:
+\[
+\lambda_{1,2} = 1 \pm \sqrt{\varepsilon}
+\]
+
+Para $\varepsilon$ pequeño, la distancia entre los valores propios de $A$ y $A + E$ es aproximadamente $\sqrt{\varepsilon}$, que es mucho mayor que $\varepsilon = \|E\|_2$ cuando $\varepsilon \ll 1$.
+
+\subsection{Ejemplo numérico con distancia mayor que 1}
+
+Para obtener una distancia mayor que 1 entre valores propios, consideremos la matriz de tamaño $3 \times 3$:
+\[
+A = \begin{pmatrix}
+0 & 1 & 0 \\
+0 & 0 & 1 \\
+0 & 0 & 0
+\end{pmatrix}
+\]
+
+con la perturbación:
+\[
+E = \begin{pmatrix}
+0 & 0 & 0 \\
+0 & 0 & 0 \\
+8 & 0 & 0
+\end{pmatrix}
+\]
+
+Aquí $\|E\|_2 = 8$. Los valores propios de $A$ son todos cero, mientras que los valores propios de $A + E$ son las raíces cúbicas de 8:
+\[
+\lambda_k = 2e^{2\pi i k/3}, \quad k = 0, 1, 2
+\]
+
+La distancia mínima entre un valor propio de $A + E$ y cualquier valor propio de $A$ es:
+\[
+\min_k |\lambda_k - 0| = 2 > 1
+\]
+
+\subsection{Conclusión}
+
+Hemos demostrado que los valores singulares son estables bajo perturbaciones: una perturbación de norma $\varepsilon$ causa cambios de a lo más $\varepsilon$ en los valores singulares. En contraste, los valores propios pueden ser extremadamente sensibles a perturbaciones, especialmente cuando la matriz es defectiva o tiene valores propios múltiples. Esta diferencia fundamental hace que los valores singulares sean más confiables en aplicaciones numéricas donde las perturbaciones por errores de redondeo son inevitables.
+
+\vspace{2cm}
+
+%------------------------------------------------------------------------------
+% 3. Iteración del algoritmo QR para aproximar raíces de polinomios
+%------------------------------------------------------------------------------
+\section{Iteración del algoritmo QR para aproximar raíces de polinomios}
+
+% --- Inserte aquí el desarrollo del punto 3 ---
+
+\subsection{Registro de tiempo de ejecución}
+% --- Agregue resultados y análisis ---
+
+\subsection{Traslación elegida en cada iteración}
+% --- Describa las traslaciones ---
+
+\subsection{Discos de Gershgorin}
+% --- Incluya las gráficas correspondientes ---
+
+\vspace{2cm}
+
+%------------------------------------------------------------------------------
+% 4. Descomposición en valores singulares para extraer el fondo de un video
+%------------------------------------------------------------------------------
+\section{Descomposición en valores singulares para extraer el fondo de un video}
+
+% --- Inserte aquí el desarrollo del punto 4 ---
+
+\subsection{Metodología}
+% --- Detalle el procedimiento empleado ---
+
+\subsection{Resultados y análisis}
+% --- Discuta la calidad y tiempo de ejecución ---
+
+\subsection{Conclusiones}
+% --- Escriba las conclusiones ---
+
+%------------------------------------------------------------------------------
+\end{document}
